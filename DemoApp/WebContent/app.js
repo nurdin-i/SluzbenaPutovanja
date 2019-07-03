@@ -1,15 +1,22 @@
+
 //realtime provjera broja raspolozivih zahtjeva
 db.collection('putovanja').onSnapshot(function(snapshot) {
 		
 	var brojac = 0; //brojac za zahtjeve koje direktor pregledava
 	var brojac2 = 0; //brojac za zahtjeve koje admin radnik pregledava
+	var tempmail = email.getValue();
 		snapshot.forEach(function(doc){
+			if(tempmail === doc.data().email){
+				prikaziMojZahtjev();
+			}
 			if(!doc.data().pregledanZahtjev){
 				brojac++;
 			}
 			if(doc.data().obradjenZahtjev === false){
 				brojac2++;
 			}
+			//updejtovanje prikaza zahtjeva kod korisnika
+			
 		})
 		//ako nema zahtjeva blokiraj button
 		if(brojac == 0){
@@ -40,6 +47,7 @@ var mainbox = new sap.m.FlexBox({
 	justifyContent: sap.m.FlexJustifyContent.Center,
 	direction: "Column"
 }).placeAt('mainPage');
+
 
 
 //MAIN PAGE
@@ -267,6 +275,8 @@ logout.attachPress(function(){
 		sap.m.MessageToast.show("Korisnik odjavljen");
 		direktorBox.setVisible(false);
 		adminRadnikBox.setVisible(false);
+		provjeriPutovanja.setVisible(false);
+
 	});
 })
 fbox.addItem(logout);
@@ -293,6 +303,8 @@ var provjeriZahtjev = new sap.m.Button({
 	text: "Provjeri zahtjev"
 });
 
+
+
 putovanjaBox.addItem(kreirajZahtjev);
 putovanjaBox.addItem(provjeriZahtjev);
 
@@ -313,6 +325,85 @@ kreirajZahtjev.attachPress(function(){
 	inputPutovanja.setVisible(true);
 	//var korisnik = auth.getInstance().getCurrentUser();
 	//console.log(korisnik);
+});
+
+
+
+
+// Provjeri kreiran zahtjev
+
+
+function prikaziMojZahtjev(){
+	provjeriPutovanja.destroyItems(); // da ponisitimo sve prethodno kako se ne bi pri svakom pozivu kreirano novi customlistitem
+	var tempmail = email.getValue();
+	db.collection('putovanja').get().then(function(snapshot) {
+	snapshot.forEach(function(doc){
+		if(tempmail === doc.data().email){
+	var customlist = new sap.m.CustomListItem({
+	})
+	console.log('usao u if');
+	console.log(doc.data().email);
+	var hotel = new sap.m.DisplayListItem({
+		label: "Ime i adresa hotela",
+		value: doc.data().hotel
+	});
+	
+	var prevoz = new sap.m.DisplayListItem({
+		label: "Prevoz",
+		value: doc.data().prevoz
+	});
+	
+	var dokumentacija = new sap.m.DisplayListItem({
+		label: "Dokumentacija",
+		value: doc.data().dokumentacija
+	});
+	
+	var osiguranje = new sap.m.DisplayListItem({
+		label: "Osiguranje",
+		value: doc.data().osiguranje
+	});
+	
+	var uplate = new sap.m.DisplayListItem({
+		label: "Uplate",
+		value: doc.data().uplate
+	});
+	
+	var PutovanjaText = new sap.m.Text({
+		text: "Vasi trenutni zahtjevi: ",
+		textAlign: sap.ui.core.TextAlign.Center
+	})
+	
+	
+	customlist.addContent(hotel);
+	customlist.addContent(prevoz);
+	customlist.addContent(dokumentacija);
+	customlist.addContent(osiguranje);
+	customlist.addContent(uplate);
+	provjeriPutovanja.addItem(PutovanjaText);
+	provjeriPutovanja.addItem(customlist);
+		} // kraj if
+	});
+	}); // kraj get snapshot
+}
+
+
+var provjeriPutovanja = new sap.m.FlexBox({
+	alignContent: sap.m.FlexAlignContent.Center,
+	alignItems: sap.m.FlexAlignItems.Center,
+	justifyContent: sap.m.FlexJustifyContent.Center,
+	direction: 'Column',
+	visible: false
+}).placeAt('zahtjev'); 
+
+
+
+
+
+
+provjeriZahtjev.attachPress(function(){
+	putovanjaBox.setVisible(false);
+	provjeriPutovanja.setVisible(true);
+	prikaziMojZahtjev();
 });
 
 
@@ -717,6 +808,7 @@ adminRadnikBox.addItem(urediZahtjev);
 adminRadnikBox.addItem(brojZahtjevaUredi);
 
 
+//prikaziZahtjev za korisnika (pregledavanje zahtjeva)
 
 
 
