@@ -104,8 +104,8 @@ var mainLogin = new sap.m.Button({
 //kad kliknemo glavni login, izbaci nam page gdje unosimo svoje korisnicke podatke
 
 mainLogin.attachPress(function(){
-	mainbox.setVisible(false); //logout je true - vidljiv
-	hbox.setVisible(true); //login je false - nevidljiv
+	mainbox.setVisible(false); //login je false - nevidljiv
+	hbox.setVisible(true); //logout je true - vidljiv 
 });
 
 mainbox.addItem(signup);
@@ -124,13 +124,25 @@ var hbox = new sap.m.FlexBox({
 	width: "100%",
 	height: "700px",
 	visible: false,
-	items: [
-		new sap.m.Text({
-			text: "Unesite korisnicke podatke:",
-				})
-		]	
 }).placeAt("hbox");
 
+
+//------------------------------------------- BackButton za LOGIN page  -------------------------------------------//
+var backButtonL = new sap.m.Button({
+	text: "Nazad",
+	type: sap.m.ButtonType.Back,
+	press: function(){
+		hbox.setVisible(false);
+		mainbox.setVisible(true);
+	}
+});
+
+var unesitePodatkeText = new sap.m.Text({
+	text: "Unesite korisnicke podatke:",
+});
+
+hbox.addItem(backButtonL);
+hbox.addItem(unesitePodatkeText);
 
 //login input - email adresa + password
 var email =  new sap.m.Input({
@@ -191,7 +203,6 @@ login.attachPress(function(){
 			provjeriBroj();
 		}
 		else{
-			console.log('nije trebalo ovdje');
 			putovanjaBox.setVisible(true);
 		}
 	}).catch(function(error){
@@ -299,6 +310,18 @@ var inputPutovanja = new sap.m.FlexBox({
 	visible: false
 }).placeAt('radnik'); 
 
+// ------------------------------------------- BACK BUTTON za KREIRAJ ZAHTJEV ------------------------------------------- //
+var backButtonKZ = new sap.m.Button({
+	text: "Nazad",
+	type: sap.m.ButtonType.Back,
+	press: function(){
+		inputPutovanja.setVisible(false);
+		putovanjaBox.setVisible(true);
+	}
+})
+
+inputPutovanja.addItem(backButtonKZ);
+
 kreirajZahtjev.attachPress(function(){
 	putovanjaBox.setVisible(false);
 	inputPutovanja.setVisible(true);
@@ -307,7 +330,18 @@ kreirajZahtjev.attachPress(function(){
 
 //------------------------------------------- PRIKAZIVANJE KREIRANOG ZAHTJEVA (radnik) -------------------------------------------//
 function prikaziMojZahtjev(){
+	
+	// ------------------------------------------- BACK BUTTON za PROVJERI PUTOVANJA ------------------------------------------- //
+	var backButtonPR = new sap.m.Button({
+		text: "Nazad",
+		type: sap.m.ButtonType.Back,
+		press: function(){
+			provjeriPutovanja.setVisible(false);
+			putovanjaBox.setVisible(true);
+		}
+	})
 	provjeriPutovanja.destroyItems(); // da ponisitimo sve prethodno kako se ne bi pri svakom pozivu kreirano novi customlistitem
+	provjeriPutovanja.addItem(backButtonPR);
 	var tempmail = email.getValue();
 	db.collection('putovanja').get().then(function(snapshot) {
 	snapshot.forEach(function(doc){
@@ -318,7 +352,6 @@ function prikaziMojZahtjev(){
 		label: "Ime i adresa hotela",
 		value: doc.data().hotel
 	});
-	
 	var prevoz = new sap.m.DisplayListItem({
 		label: "Prevoz",
 		value: doc.data().prevoz
@@ -353,6 +386,7 @@ function prikaziMojZahtjev(){
 	customlist.addContent(dokumentacija);
 	customlist.addContent(osiguranje);
 	customlist.addContent(uplate);
+
 	provjeriPutovanja.addItem(PutovanjaText);
 	provjeriPutovanja.addItem(customlist);
 		} // kraj if
@@ -419,15 +453,8 @@ posaljiZahtjev.attachPress(function(){
 	var tempPrezime = prezime.getValue();
 	var tempOdrediste = odrediste.getValue();
 	var tempvrDolazak = vrDolazak.getValue();
-	var tempvrPolazak = vrPolazak.getValue();
-		
+	var tempvrPolazak = vrPolazak.getValue();		
 	var user = firebase.auth().currentUser;
-	
-	console.log(tempIme);
-	console.log(tempPrezime);
-	console.log(tempOdrediste);
-	console.log(tempvrPolazak);
-	console.log(tempvrDolazak);
 	
 //------------------------------------------- DODAVANJE novog dokumenta u kolekciju/databazu 'PUTOVANJA' -------------------------------------------//
 	db.collection("putovanja").doc(user.email).set({
@@ -456,12 +483,15 @@ posaljiZahtjev.attachPress(function(){
 	kreirajZahtjev.setBlocked(true); //blokiraj kreirajZahtjev button jer je vec kreiran zahtjev
 });
 
+
 inputPutovanja.addItem(ime);
 inputPutovanja.addItem(prezime);
 inputPutovanja.addItem(odrediste);
 inputPutovanja.addItem(vrPolazak);
 inputPutovanja.addItem(vrDolazak);
 inputPutovanja.addItem(posaljiZahtjev);
+
+
 
 
 //-------------------------------------------PRIKAZ ZAHTJEVA (direktor) -------------------------------------------//
@@ -746,7 +776,6 @@ function zahtjev(){
 		}
 }
 
-
 var adminRadnikBox =  new sap.m.FlexBox({
 	visible: false,
 	direction: 'Column',
@@ -768,7 +797,6 @@ urediZahtjev.attachPress(function(){
 	urediZahtjev.setEnabled(false);
 	zahtjev();
 })
-
 
 adminRadnikBox.addItem(urediZahtjev);
 adminRadnikBox.addItem(brojZahtjevaUredi);
