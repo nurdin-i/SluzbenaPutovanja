@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+
+		<script src="resources/sap-ui-core.js"
+				id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.m"
+				data-sap-ui-libs="sap.ui.commons"
+				data-sap-ui-libs="sap.ui.core"
+				data-sap-ui-theme="sap_bluecrystal">
+		</script>
+		<!-- only load the mobile lib "sap.m" and the "sap_bluecrystal" theme -->
+
+
+
+	
+	</head>
+	<body class="sapUiBody" role="application">
+		<div id="header"></div>
+		<div id="mainPage"></div>
+		<div id="radnik"></div>
+		<div id="direktor"></div>
+		<div id="adminRadnik"></div>
+		<div id="hbox"></div>
+		<div id="content"></div>
+	</body>
+	
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyCK8qadM3kzGwkviyNeIrb7hpBNwqwAGmI",
+    authDomain: "nurdinproject-60662.firebaseapp.com",
+    databaseURL: "https://nurdinproject-60662.firebaseio.com",
+    projectId: "nurdinproject-60662",
+    storageBucket: "nurdinproject-60662.appspot.com",
+    messagingSenderId: "781974277939",
+    appId: "1:781974277939:web:66416600e562f827"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  //referenca na auth i firestore database
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  
+</script>
+
+	<script src="app.js"></script>
+</html>
