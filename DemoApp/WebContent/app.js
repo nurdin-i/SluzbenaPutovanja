@@ -38,7 +38,8 @@ var mainbox = new sap.m.FlexBox({
 	alignContent: sap.m.FlexAlignContent.Center,
 	alignItems: sap.m.FlexAlignItems.Center,
 	justifyContent: sap.m.FlexJustifyContent.Center,
-	direction: "Column"
+	height: "700px",
+	direction: sap.m.FlexDirection.Row,
 }).placeAt('mainPage');
 
 // ------------------------------------------- MAIN PAGE - sign up button + login button -------------------------------------------//
@@ -492,8 +493,6 @@ inputPutovanja.addItem(vrDolazak);
 inputPutovanja.addItem(posaljiZahtjev);
 
 
-
-
 //-------------------------------------------PRIKAZ ZAHTJEVA (direktor) -------------------------------------------//
 function prikaziZahtjev(){
 	var BreakException = {};
@@ -526,8 +525,9 @@ function prikaziZahtjev(){
 										db.collection('putovanja').doc(tempmail).update({
 										pregledanZahtjev: true
 										});
+										sap.m.MessageToast.show("Zahtjev prihvacen!");
 										customlist.setVisible(false);
-										
+//------------------------------------------- SEND EMAIL (Prihvacen zahtjev)  -------------------------------------------//
 									}
 								}),
 								new sap.m.Button({
@@ -538,7 +538,14 @@ function prikaziZahtjev(){
 										db.collection('putovanja').doc(tempmail).update({
 										pregledanZahtjev: true
 										});
+										
+										db.collection("putovanja").doc(doc.data().email).delete().then(function() {
+											sap.m.MessageToast.show("Zahtjev odbijen!");
+										}).catch(function(error) {
+										    console.error("Error prilikom brisanja dokumenta: ", error);
+										});
 										customlist.setVisible(false);	
+//------------------------------------------- SEND EMAIL (Odbijen zahtjev)  -------------------------------------------//
 									}
 								})
 							]
@@ -580,8 +587,6 @@ pregledajZahtjeve.attachPress(function(){
 
 direktorBox.addItem(pregledajZahtjeve);
 direktorBox.addItem(brojZahtjeva);
-
-
 
 
 //------------------------------------------- ADMINISTRATIVNI RADNIK page -------------------------------------------//
@@ -754,8 +759,9 @@ function zahtjev(){
 								hotel.destroyContent();
 								urediZahtjev.setEnabled(true);
 								customlist.setVisible(false);
+								sap.m.MessageToast.show("Zahtjev uspjesno obradjen!");
+//------------------------------------------- SEND EMAIL (Zahtjev obradjen)  -------------------------------------------//
 							}
-							
 						})
 						customlist.addContent(opisPutnika);
 						customlist.addContent(hotel);
@@ -781,7 +787,6 @@ var adminRadnikBox =  new sap.m.FlexBox({
 	direction: 'Column',
 	width: "100%",
 }).placeAt('adminRadnik');
-
 
 
 var brojZahtjevaUredi = new sap.m.Text({
