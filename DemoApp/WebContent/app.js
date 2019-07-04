@@ -470,7 +470,7 @@ posaljiZahtjev.attachPress(function(){
 	    hotel: " ",
 	    uplate: false,
 	    prevoz: " ",
-	    osiguranje: " ",
+	    osiguranje: false,
 	    dokumentacija: false,
 	})
 	.then(function(docRef) {
@@ -481,7 +481,6 @@ posaljiZahtjev.attachPress(function(){
 	});
 	inputPutovanja.setVisible(false); // vracamo se na pocetnu stranicu // input nije vidljiv
 	putovanjaBox.setVisible(true);
-	kreirajZahtjev.setBlocked(true); //blokiraj kreirajZahtjev button jer je vec kreiran zahtjev
 });
 
 
@@ -543,6 +542,7 @@ function prikaziZahtjev(){
 											sap.m.MessageToast.show("Zahtjev odbijen!");
 										}).catch(function(error) {
 										    console.error("Error prilikom brisanja dokumenta: ", error);
+										    
 										});
 										customlist.setVisible(false);	
 //------------------------------------------- SEND EMAIL (Odbijen zahtjev)  -------------------------------------------//
@@ -564,9 +564,6 @@ function prikaziZahtjev(){
 
 //------------------------------------------- KREIRANJE DIREKTOR -stranice- -------------------------------------------//
 var direktorBox =  new sap.m.FlexBox({
-	//alignContent: sap.m.FlexAlignContent.Center,
-	//alignItems: sap.m.FlexAlignItems.Center,
-	//justifyContent: sap.m.FlexJustifyContent.Center,
 	visible: false,
 	direction: 'Column',
 	width: "100%",
