@@ -7,7 +7,7 @@ function provjeriBroj(){
 			if(!doc.data().pregledanZahtjev){
 				brojac++;
 			}
-			if(!doc.data().obradjenZahtjev){
+			if(!doc.data().obradjenZahtjev && doc.data().pregledanZahtjev){
 				brojac2++;
 			}
 		});
@@ -457,6 +457,12 @@ posaljiZahtjev.attachPress(function(){
 	var tempvrPolazak = vrPolazak.getValue();		
 	var user = firebase.auth().currentUser;
 	
+	if(!tempIme || !tempPrezime || !tempOdrediste || !tempvrDolazak || !tempvrPolazak) 
+		sap.m.MessageToast.show("Sva polja moraju biti popunjena!");
+	else{
+		
+	
+	
 //------------------------------------------- DODAVANJE novog dokumenta u kolekciju/databazu 'PUTOVANJA' -------------------------------------------//
 	db.collection("putovanja").doc(user.email).set({
 	    ime: tempIme,
@@ -481,6 +487,7 @@ posaljiZahtjev.attachPress(function(){
 	});
 	inputPutovanja.setVisible(false); // vracamo se na pocetnu stranicu // input nije vidljiv
 	putovanjaBox.setVisible(true);
+	}
 });
 
 
